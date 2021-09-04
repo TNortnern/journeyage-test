@@ -1,23 +1,24 @@
 <template>
-  <div class="border border-4 rounded-md pt-2 pb-0 h-150 md:(w-[48%]) overflow-y-auto">
+  <div class="border border-4 rounded-md pt-2 pb-0 h-150 md:(w-[48%]) overflow-y-auto flex flex-col">
     <div class="px-2">
       <div class="flex mb-3 items-center">
         <button class="flex items-center rounded-full focus:(outline-none rounded-full ring ring-gray-200) hover:bg-gray-200 px-2.5 py-1.25 duration-150 mr-4">
           <menu-icon class="w-8 h-8" />
         </button>
         <p>
-          Contact Name (417-882-3839)
+          {{ contact?.name }} ({{ contact?.number }})
         </p>
       </div>
       <message
-        v-for="i in 20"
-        :key="i"
-        :class="i % 2 === 0 ? 'bg-blue-400 text-white' : 'bg-gray-300'"
-        text="Dicta consequuntur iure et aspernatur placeat. Cum vel nesciunt sint in voluptatem et. Alias officiis nulla quia. Explicabo quia rerum dolorum cupiditate. Dicta consequuntur iure et aspernatur placeat. Cum vel nesciunt sint in voluptatem et. Alias officiis nulla quia. Explicabo quia rerum dolorum cupiditate."
-      />
+        v-for="item in conversation.messages"
+        :key="item.id"
+        :class="!getOtherUsers.find((u) => u.user === item.user) ? 'bg-blue-400 text-white' : 'bg-gray-300'"
+      >
+        {{ item.text }}
+      </message>
     </div>
     <form
-      class="w-full sticky bottom-0"
+      class="w-full sticky bottom-0 mt-auto"
       @submit.prevent="submit"
     >
       <input
@@ -33,13 +34,47 @@
 <script>
 import Message from './Message.vue'
 import { MenuIcon } from '@heroicons/vue/solid'
-import { ref } from '@vue/reactivity'
+import { computed, ref } from '@vue/reactivity'
+import { useStore } from 'vuex'
 export default {
   components: { Message, MenuIcon },
-  setup () {
+  props: {
+    user: {
+      type: Object,
+      default: null,
+    },
+    contact: {
+      type: Object,
+      default: null,
+    },
+    conversation: {
+      type: Object,
+      default: null,
+    }
+  },
+  setup (props) {
     const message = ref('')
+    const store = useStore()
+    console.log(`store`, store.state)
+    const convers = computed(() => {
+      const contact = store.state.users.find((c) => c.id === props.contact.id)
+      return {
+        contact,
+      }
+    })
+    const getOtherUsers = computed(() => {
+      const getUser = props.conversation.messages.filter((c) => {
+        console.log(c)
+        // using an array just in case a group chat is implemeted and needing to find all user's that is isn't the user of the device
+      const otherUsers = c.user !== props.user.id
+      return otherUsers
+      })
+      return getUser
+    })
     return {
       message,
+      convers,
+      getOtherUsers,
       submit () {
         console.log(message.value)
       }
