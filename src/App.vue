@@ -1,10 +1,15 @@
 <template>
-  <div class="max-w-7xl mx-auto pt-8">
-    <div class="relative text-sm bg-gray-200 py-2 px-4 shadow rounded-xl">
-      <div>Hey How are you today?</div>
+  <div class="max-w-7xl mx-auto pt-8 min-h-screen">
+    <div class="flex justify-center space-x-2">
+     <message-box />
+     <message-box />
     </div>
   </div>
 </template>
-<script setup>
+<script>
+import MessageBox from './components/MessageBox.vue'
+export default {
+  components: { MessageBox },
 
+}
 </script>
