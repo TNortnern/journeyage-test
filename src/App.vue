@@ -1,8 +1,8 @@
 <template>
   <div class="max-w-7xl mx-auto pt-8 min-h-screen">
     <div class="flex justify-center space-x-2">
-     <message-box />
-     <message-box />
+      <message-box />
+      <message-box />
     </div>
   </div>
 </template>
