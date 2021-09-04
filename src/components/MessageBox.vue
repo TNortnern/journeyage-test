@@ -22,7 +22,7 @@
       @submit.prevent="submit"
     >
       <input
-        v-model="message"
+        v-model="text"
         type="text"
         class="border-t-4 w-full focus:outline-none text-sm px-3.5 h-13 flex items-center"
         placeholder="Type your message...."
@@ -53,7 +53,7 @@ export default {
     }
   },
   setup (props) {
-    const message = ref('')
+    const text = ref('')
     const store = useStore()
     console.log(`store`, store.state)
     const convers = computed(() => {
@@ -72,11 +72,17 @@ export default {
       return getUser
     })
     return {
-      message,
+      text,
       convers,
       getOtherUsers,
       submit () {
-        console.log(message.value)
+        console.log(text.value)
+        store.commit('NEW_TEXT_MESSAGE', {
+          conversation: props.conversation,
+          user: props.user.id,
+          text: text.value,
+        })
+        text.value = ''
       }
     }
   }

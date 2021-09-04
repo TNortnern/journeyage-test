@@ -45,6 +45,19 @@ const store = createStore({
     SET_CONTACT(state, { key, value }) {
       state.contacts[key] = value;
     },
+    NEW_TEXT_MESSAGE(state, { conversation, user, text }) {
+      const conversationIndex = [...state.conversations].findIndex(
+        (c) => c.id === conversation?.id
+      );
+      const findConversation = [...state.conversations][conversationIndex];
+      findConversation.messages.push({
+        conversation,
+        user,
+        text,
+      });
+      state.conversations[conversationIndex].messages =
+        findConversation.messages;
+    },
   },
 });
 
