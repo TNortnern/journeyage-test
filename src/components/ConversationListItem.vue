@@ -1,5 +1,11 @@
 <template>
-  <button class="flex py-4 px-2 items-center border-b-2 border-t-2 hover:bg-gray-200 duration-150 w-full">
+  <button
+    class="flex py-4 px-2 items-center border-b-2 border-t-2 hover:bg-gray-200 duration-150 w-full"
+    @click="$store.commit('SET_ACTIVE_CONVERSATION', {
+      user,
+      conversation,
+    }), $emit('toggleDrawer')"
+  >
     <div class="mr-5">
       <img
         src="https://source.unsplash.com/_7LbC5J-jw4/600x600"
@@ -7,17 +13,27 @@
         alt=""
       >
     </div>
-    <div class="text-left">
+    <div
+      v-if="mostRecentUser"
+      class="text-left"
+    >
       <div class="text-lg font-semibold">
         {{ getUserTitle }}:
       </div>
       <p class="text-gray-500">
         {{ mostRecentMessage.text }}
       </p>
+
       <p class="text-black font-bold text-xs">
         {{ timeAgo }} ago
       </p>
     </div>
+    <p
+      v-else
+      class="text-blue-800"
+    >
+      Draft
+    </p>
   </button>
 </template>
 
@@ -36,6 +52,7 @@ export default {
       default: null,
     }
   },
+  emits: ['toggleDrawer'],
   setup (props) {
     const timeSince = (date) => {
       let seconds = Math.floor((new Date() - date) / 1000);
@@ -70,25 +87,28 @@ export default {
     })
     const mostRecentUser = store.getters.GET_USER(mostRecentMessage.value?.user)
     const getUserTitle = computed(() => mostRecentUser?.id === props.user.id ? 'You' : mostRecentUser.name)
-    const timeAgo = ref(timeSince(mostRecentMessage.value.sent))
+    const timeAgo = ref( mostRecentMessage.value ? timeSince(mostRecentMessage.value.sent) : 0)
     const timeAgoCounter = ref()
     watch(() => mostRecentMessage.value, (val) => {
+      if (!val) return
       console.log(`val`, val)
+      console.log(`getUserTitle.value`, getUserTitle.value)
+      console.log(`props.user`, props.user)
       timeAgoCounter.value = setInterval(() => {
         timeAgo.value = timeSince(mostRecentMessage.value.sent)
       }, 5000);
-    timeAgo.value = timeSince(mostRecentMessage.value.sent)
-  })
-  onBeforeUnmount (() => {
-  clearInterval(timeAgoCounter.value)
-})
-return {
-  mostRecentMessage,
-  mostRecentUser,
-  getUserTitle,
-  timeSince,
-  timeAgo,
-}
+      timeAgo.value = timeSince(mostRecentMessage.value.sent)
+    })
+    onBeforeUnmount(() => {
+      clearInterval(timeAgoCounter.value)
+    })
+    return {
+      mostRecentMessage,
+      mostRecentUser,
+      getUserTitle,
+      timeSince,
+      timeAgo,
+    }
   }
 }
 </script>

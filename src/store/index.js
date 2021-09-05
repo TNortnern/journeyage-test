@@ -9,6 +9,7 @@ const store = createStore({
         id: 1,
         name: faker.name.findName(),
         number: faker.phone.phoneNumber(),
+        activeConversation: 1,
         currentMessages: [
           //   {
           //     id: 1,
@@ -22,6 +23,7 @@ const store = createStore({
         id: 2,
         name: faker.name.findName(),
         number: faker.phone.phoneNumber(),
+        activeConversation: 1,
         currentMessages: [
           {
             id: 1,
@@ -67,6 +69,9 @@ const store = createStore({
     GET_USER: (state) => (id) => {
       return state.users.find((user) => user.id === id);
     },
+    GET_CONVERSATION: (state) => (id) => {
+      return state.conversations.find((conv) => conv.id === id);
+    },
   },
   actions: {
     INITIALIZE_MESSAGE({ state, commit }, { user, conversation, text = "" }) {
@@ -94,6 +99,59 @@ const store = createStore({
       });
       return index;
     },
+    GENERATE_USER({ state, commit }) {
+      const users = [...state.users];
+      const newUser = {
+        id: faker.datatype.uuid(),
+        name: faker.name.findName(),
+        number: faker.phone.phoneNumber(),
+        activeConversation: null,
+        currentMessages: [],
+        contacts: [],
+      };
+      users.push(newUser);
+      commit("SET", {
+        key: "users",
+        value: users,
+      });
+      return newUser;
+    },
+    async NEW_CONVERSATION(
+      { state, commit, dispatch },
+      { user, message = {}, sent }
+    ) {
+      // dispatch creates a promise
+      const newUser = await dispatch("GENERATE_USER");
+      commit("SET", {
+        key: "conversations",
+        value: [
+          ...state.conversations,
+          {
+            id: faker.datatype.uuid(),
+            // if I had more time on the test it'd make the users dynamically creatable but for now a new conversation randomly generates a new conversation for the user
+            users: [
+              {
+                user: user.id,
+                addedBy: null,
+              },
+              {
+                user: newUser.id,
+                addedBy: user.id,
+              },
+            ],
+            messages: Object.keys(message).length
+              ? [
+                  {
+                    id: faker.datatype.uuid(),
+                    ...message,
+                    sent: sent || faker.date.recent(),
+                  },
+                ]
+              : [],
+          },
+        ],
+      });
+    },
   },
   mutations: {
     SET(state, { key, value }) {
@@ -102,7 +160,10 @@ const store = createStore({
     SET_CONTACT(state, { key, value }) {
       state.contacts[key] = value;
     },
-
+    SET_ACTIVE_CONVERSATION(state, { user, conversation }) {
+      const userIndex = state.users.findIndex((u) => u.id === user.id);
+      state.users[userIndex].activeConversation = conversation.id;
+    },
     NEW_TEXT_MESSAGE(state, { conversation, user, text }) {
       const conversationIndex = [...state.conversations].findIndex(
         (c) => c.id === conversation?.id
@@ -116,22 +177,6 @@ const store = createStore({
       });
       state.conversations[conversationIndex].messages =
         findConversation.messages;
-    },
-    NEW_CONVERSATION(state, { users = [], message = {} }) {
-      state.conversations = [
-        ...state.conversations,
-        {
-          id: faker.datatype.uuid(),
-          users,
-          messages: [
-            {
-              id: faker.datatype.uuid(),
-              ...message,
-              sent: faker.date.recent(),
-            },
-          ],
-        },
-      ];
     },
   },
 });

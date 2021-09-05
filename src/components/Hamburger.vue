@@ -1,6 +1,6 @@
 <template>
   <button
-    class="text-gray-500 hover:text-gray-700 w-10 h-10 relative focus:outline-none duration-50 relative z-40"
+    class="text-gray-500 hover:text-gray-700 w-10 h-10 relative focus:outline-none duration-50 "
     @click="$emit('toggleDrawer')"
   >
     <div class="block w-5 absolute left-1/2 top-1/2   transform  -translate-x-1/2 -translate-y-1/2">

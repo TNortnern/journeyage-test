@@ -1,6 +1,9 @@
 <template>
   <div class="flex flex-col h-full">
-    <div class="px-2">
+    <div
+      v-if="conversation.messages.length"
+      class="px-2"
+    >
       <transition-group
         name="fade"
         mode="out-in"
@@ -73,7 +76,7 @@ export default {
       }
     })
     const getOtherUsers = computed(() => {
-      const getUser = props.conversation.messages.filter((c) => {
+      const getUser = props.conversation.users.filter((c) => {
         // console.log(c)
         // using an array just in case a group chat is implemeted and needing to find all user's that is isn't the user of the device
         const otherUsers = c.user !== props.user.id
