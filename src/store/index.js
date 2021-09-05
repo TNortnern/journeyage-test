@@ -10,11 +10,11 @@ const store = createStore({
         name: faker.name.findName(),
         number: faker.phone.phoneNumber(),
         currentMessages: [
-        //   {
-        //     id: 1,
-        //     conversation: 1,
-        //     text: faker.random.words(),
-        //   },
+          //   {
+          //     id: 1,
+          //     conversation: 1,
+          //     text: faker.random.words(),
+          //   },
         ],
         contacts: [],
       },
@@ -35,7 +35,17 @@ const store = createStore({
     conversations: [
       {
         id: 1,
-        users: [1, 2],
+        users: [
+          // if this is null, that mean this user created the text message
+          {
+            user: 1,
+            addedBy: null,
+          },
+          {
+            user: 2,
+            addedBy: 1,
+          },
+        ],
         messages: [
           {
             id: 1,
@@ -53,6 +63,11 @@ const store = createStore({
       },
     ],
   }),
+  getters: {
+    GET_USER: (state) => (id) => {
+      return state.users.find((user) => user.id === id);
+    },
+  },
   actions: {
     INITIALIZE_MESSAGE({ state, commit }, { user, conversation, text = "" }) {
       let index = 0;
