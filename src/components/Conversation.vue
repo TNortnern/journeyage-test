@@ -74,7 +74,7 @@ export default {
     })
     const getOtherUsers = computed(() => {
       const getUser = props.conversation.messages.filter((c) => {
-        console.log(c)
+        // console.log(c)
         // using an array just in case a group chat is implemeted and needing to find all user's that is isn't the user of the device
         const otherUsers = c.user !== props.user.id
         return otherUsers
@@ -85,7 +85,7 @@ export default {
       text,
       getOtherUsers,
       submit () {
-        console.log(text.value)
+        // console.log(text.value)
         store.commit('NEW_TEXT_MESSAGE', {
           conversation: props.conversation,
           user: props.user.id,

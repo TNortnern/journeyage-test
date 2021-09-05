@@ -1,19 +1,29 @@
 <template>
   <div class="border border-4 rounded-md pt-2 pb-0 h-150 md:(w-[48%]) overflow-y-auto flex flex-col relative">
-    <div class="bg-black bg-opacity-75 absolute h-full w-full z-25" />
-    <div class="bg-white h-full absolute inset-0 w-4/5 z-30 pt-16">
-      <conversation-list-item
-        v-for="item in $store.state.conversations"
-        :key="item.id"
-        :conversation="item"
-        :user="user"
+    <transition name="fade">
+      <div
+        v-if="drawerOpen"
+        class="bg-black bg-opacity-75 absolute h-full w-full z-25"
       />
-    </div>
-    <!-- {{ user }} -->
+    </transition>
+    <transition name="drawer">
+      <div
+        v-if="drawerOpen"
+        class="bg-white h-full absolute inset-0 w-4/5 z-30 pt-16"
+      >
+        <conversation-list-item
+          v-for="item in $store.state.conversations"
+          :key="item.id"
+          :conversation="item"
+          :user="user"
+        />
+      </div>
+    </transition>
     <div class="flex mb-3 items-center px-2">
-      <button class="flex items-center rounded-full focus:(outline-none rounded-full ring ring-gray-200) hover:bg-gray-200 px-2.5 py-1.25 duration-150 mr-4 relative z-35">
-        <menu-icon class="w-8 h-8" />
-      </button>
+      <hamburger
+        :drawer-open="drawerOpen"
+        @toggleDrawer="toggleDrawer"
+      />
       <p>
         {{ contact?.name }} ({{ contact?.number }})
       </p>
@@ -23,11 +33,12 @@
 </template>
 
 <script>
-import { MenuIcon } from '@heroicons/vue/solid'
 import Conversation from './Conversation.vue'
 import ConversationListItem from './ConversationListItem.vue'
+import { ref } from '@vue/reactivity'
+import Hamburger from './Hamburger.vue'
 export default {
-  components: {  MenuIcon, Conversation, ConversationListItem },
+  components: {  Conversation, ConversationListItem, Hamburger, },
   props: {
     user: {
       type: Object,
@@ -42,9 +53,12 @@ export default {
       default: null,
     }
   },
-  setup (props) {
-    console.log(`props.conversation`, props.conversation)
+  setup () {
+    const drawerOpen = ref(false)
+    const toggleDrawer = () => drawerOpen.value = !drawerOpen.value
     return {
+      drawerOpen,
+      toggleDrawer,
     }
   }
 }
@@ -60,5 +74,21 @@ export default {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+.drawer-enter-active,
+.drawer-leave-active {
+  transition: all 0.4s;
+  /* position: absolute; */
+}
+
+.drawer-enter-from,
+.drawer-leave-to {
+  transform: translateX(-1000px) scale(0.5);
+}
+
+.drawer-leave,
+.drawer-enter-to {
+  transform: translateX(0) scale(1);
 }
 </style>
