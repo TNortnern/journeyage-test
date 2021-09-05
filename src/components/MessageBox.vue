@@ -1,5 +1,6 @@
 <template>
   <div class="border border-4 rounded-md pt-2 pb-0 h-150 md:(w-[48%]) overflow-y-auto flex flex-col">
+    <!-- {{ user }} -->
     <div class="px-2">
       <div class="flex mb-3 items-center">
         <button class="flex items-center rounded-full focus:(outline-none rounded-full ring ring-gray-200) hover:bg-gray-200 px-2.5 py-1.25 duration-150 mr-4">
@@ -9,13 +10,20 @@
           {{ contact?.name }} ({{ contact?.number }})
         </p>
       </div>
-      <message
-        v-for="item in conversation.messages"
-        :key="item.id"
-        :class="!getOtherUsers.find((u) => u.user === item.user) ? 'bg-blue-400 text-white' : 'bg-gray-300'"
+      <transition-group
+        name="fade"
+        mode="out-in"
+        tag="div"
+        class="messages"
       >
-        {{ item.text }}
-      </message>
+        <message
+          v-for="item in conversation.messages"
+          :key="item.id"
+          :class="!getOtherUsers.find((u) => u.user === item.user) ? 'bg-blue-400 text-white' : 'bg-gray-300'"
+        >
+          {{ item.text }}
+        </message>
+      </transition-group>
     </div>
     <form
       class="w-full sticky bottom-0 mt-auto"
@@ -34,7 +42,7 @@
 <script>
 import Message from './Message.vue'
 import { MenuIcon } from '@heroicons/vue/solid'
-import { computed, ref } from '@vue/reactivity'
+import { computed } from '@vue/reactivity'
 import { useStore } from 'vuex'
 export default {
   components: { Message, MenuIcon },
@@ -53,27 +61,40 @@ export default {
     }
   },
   setup (props) {
-    const text = ref('')
+    // const text = ref('')
     const store = useStore()
     console.log(`store`, store.state)
-    const convers = computed(() => {
-      const contact = store.state.users.find((c) => c.id === props.contact.id)
-      return {
-        contact,
-      }
-    })
     const getOtherUsers = computed(() => {
       const getUser = props.conversation.messages.filter((c) => {
         console.log(c)
         // using an array just in case a group chat is implemeted and needing to find all user's that is isn't the user of the device
-      const otherUsers = c.user !== props.user.id
-      return otherUsers
+        const otherUsers = c.user !== props.user.id
+        return otherUsers
       })
       return getUser
     })
+    const text = computed({
+      get () {
+        const messageIndex = props.user.currentMessages.findIndex((curr) => curr.conversation === props.conversation.id)
+        if (!props.user.currentMessages.length || messageIndex < 0) {
+          const index = store.dispatch('INITIALIZE_MESSAGE', {
+            conversation: props.conversation.id,
+            user: props.user
+          })
+          return props.user.currentMessages[index]?.text
+        }
+        return props.user.currentMessages[messageIndex]?.text
+      },
+      set (value) {
+        store.dispatch('INITIALIZE_MESSAGE', {
+          conversation: props.conversation.id,
+          user: props.user,
+          text: value,
+        })
+      }
+    })
     return {
       text,
-      convers,
       getOtherUsers,
       submit () {
         console.log(text.value)
@@ -88,3 +109,16 @@ export default {
   }
 }
 </script>
+
+
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
