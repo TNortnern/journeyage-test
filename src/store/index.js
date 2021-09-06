@@ -1,6 +1,22 @@
 import { createStore } from "vuex";
 import faker from "faker";
-
+   const randomColorStyle = () => {
+     let textColor = "black";
+     const bgColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+     if (bgColor) {
+       const hex = bgColor.replace("#", "");
+       const c_r = parseInt(hex.substr(0, 2), 16);
+       const c_g = parseInt(hex.substr(2, 2), 16);
+       const c_b = parseInt(hex.substr(4, 2), 16);
+       const brightness = (c_r * 299 + c_g * 587 + c_b * 114) / 1000;
+       if (brightness > 155) {
+         textColor = "white";
+       }
+     }
+     return `background-color: ${bgColor}; color: ${
+       textColor
+     }`;
+   };
 // Create a new store instance.
 const store = createStore({
   state: () => ({
@@ -9,6 +25,7 @@ const store = createStore({
         id: 1,
         name: faker.name.findName(),
         number: faker.phone.phoneNumber(),
+        colorStyle: randomColorStyle(),
         activeConversation: 1,
         currentMessages: [
           //   {
@@ -23,6 +40,7 @@ const store = createStore({
         id: 2,
         name: faker.name.findName(),
         number: faker.phone.phoneNumber(),
+        colorStyle: randomColorStyle(),
         activeConversation: 1,
         // keeps track of all user's current messages in each conversation
         currentMessages: [

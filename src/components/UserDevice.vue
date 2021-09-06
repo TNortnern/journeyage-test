@@ -21,13 +21,11 @@
         </template>
       </p>
     </div>
-    <div class="h-full overflow-y-auto">
-      <conversation
-        v-if="conversation"
-        :user="user"
-        :conversation="conversation"
-      />
-    </div>
+    <conversation
+      v-if="conversation"
+      :user="user"
+      :conversation="conversation"
+    />
   </div>
 </template>
 
@@ -45,6 +43,10 @@ export default {
       type: Object,
       default: null,
     },
+    id: {
+      type: String,
+      default: ''
+    }
   },
   setup (props) {
     const user = ref(props.defaultUser)

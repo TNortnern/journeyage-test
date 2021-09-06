@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <div
+    ref="topDiv"
+    class="h-full overflow-y-auto"
+  >
     <div
       v-if="conversation.messages.length"
       class="px-2"
@@ -15,6 +18,9 @@
           :key="item.id"
           :name="isOtherUser(item) ? firstString($store.getters.GET_USER(isOtherUser(item)?.user)?.name) : firstString(user?.name)"
           :button="{class: !isOtherUser(item) ? 'bg-blue-400 text-white' : 'bg-gray-300'}"
+          :name-el="{
+            style: isOtherUser(item) ? $store.getters.GET_USER(isOtherUser(item)?.user)?.colorStyle : user?.colorStyle,
+          }"
         >
           {{ item.text }}
         </message>
@@ -41,7 +47,7 @@
 </template>
 
 <script>
-import { computed } from '@vue/reactivity'
+import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 import Message from './Message.vue'
 export default {
@@ -58,11 +64,15 @@ export default {
     conversation: {
       type: Object,
       default: null,
+    },
+    id: {
+      type: String,
+      default: ''
     }
   },
   setup (props) {
     const store = useStore()
-   
+    const topDiv = ref(null)
     const text = computed({
       get () {
         const messageIndex = props.user.currentMessages.findIndex((curr) => curr.conversation === props.conversation.id)
@@ -92,14 +102,15 @@ export default {
       })
       return getUser
     })
-     const isOtherUser = (item) => {
-     return getOtherUsers.value.find((u) => u.user === item.user)
+    const isOtherUser = (item) => {
+      return getOtherUsers.value.find((u) => u.user === item.user)
     }
     return {
       text,
       isOtherUser,
       getOtherUsers,
       firstString: (str) => str.charAt(0),
+      topDiv,
       submit () {
         if (!text.value) return
         store.commit('NEW_TEXT_MESSAGE', {
@@ -107,6 +118,8 @@ export default {
           user: props.user.id,
           text: text.value,
         })
+        const container = topDiv.value;
+        container.scrollTop = container.scrollHeight;
         text.value = ''
       }
     }
