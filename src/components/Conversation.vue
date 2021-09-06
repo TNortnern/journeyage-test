@@ -27,7 +27,7 @@
       </transition-group>
     </div>
     <form
-      class="w-full md:(absolute) fixed bottom-0"
+      class="w-full md:(absolute) fixed bottom-0 -mt-12"
       @submit.prevent="submit"
     >
       <input
