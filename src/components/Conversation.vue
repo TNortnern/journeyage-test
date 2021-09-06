@@ -20,7 +20,7 @@
       </transition-group>
     </div>
     <form
-      class="w-full absolute bottom-0"
+      class="w-full md:(absolute) fixed bottom-0"
       @submit.prevent="submit"
     >
       <input
