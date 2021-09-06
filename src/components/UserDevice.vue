@@ -92,14 +92,15 @@ export default {
 .fade-leave-to {
   opacity: 0;
 }
-.text-fade-enter-active,
-.text-fade-leave-active {
-  transition: opacity 0.25s ease;
+.message-fade-enter-active,
+.message-fade-leave-active {
+  transition: all .25s ease;
 }
 
-.text-fade-enter-from,
-.text-fade-leave-to {
+.message-fade-enter-from,
+.message-fade-leave-to {
   opacity: 0;
+  transform: scale(0)
 }
 
 .drawer-enter-active,

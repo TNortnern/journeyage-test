@@ -8,10 +8,10 @@
       class="px-2"
     >
       <transition-group
-        name="fade"
+        name="message-fade"
         mode="out-in"
         tag="div"
-        class="messages pb-30 pt-24 md:(pb-25 pt-15)"
+        class="messages pt-24 md:(pt-15) pb-24 mb-12"
       >
         <message
           v-for="item in conversation.messages"

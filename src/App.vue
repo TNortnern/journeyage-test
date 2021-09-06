@@ -25,7 +25,5 @@ export default {
   components: {
     UserDevice, 
   },
-
-
 }
 </script>
