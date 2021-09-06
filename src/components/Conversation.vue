@@ -8,12 +8,13 @@
         name="fade"
         mode="out-in"
         tag="div"
-        class="messages pb-30 pt-24 md:(pb-0 pt-0)"
+        class="messages pb-30 pt-24 md:(pb-25 pt-15)"
       >
         <message
           v-for="item in conversation.messages"
           :key="item.id"
-          :class="!getOtherUsers.find((u) => u.user === item.user) ? 'bg-blue-400 text-white' : 'bg-gray-300'"
+          :name="isOtherUser(item) ? firstString($store.getters.GET_USER(isOtherUser(item)?.user)?.name) : firstString(user?.name)"
+          :button="{class: !isOtherUser(item) ? 'bg-blue-400 text-white' : 'bg-gray-300'}"
         >
           {{ item.text }}
         </message>
@@ -61,6 +62,7 @@ export default {
   },
   setup (props) {
     const store = useStore()
+   
     const text = computed({
       get () {
         const messageIndex = props.user.currentMessages.findIndex((curr) => curr.conversation === props.conversation.id)
@@ -90,9 +92,14 @@ export default {
       })
       return getUser
     })
+     const isOtherUser = (item) => {
+     return getOtherUsers.value.find((u) => u.user === item.user)
+    }
     return {
       text,
+      isOtherUser,
       getOtherUsers,
+      firstString: (str) => str.charAt(0),
       submit () {
         if (!text.value) return
         store.commit('NEW_TEXT_MESSAGE', {
