@@ -29,6 +29,12 @@
         class="border-t-4 w-full focus:outline-none text-sm px-3.5 h-13 flex items-center"
         placeholder="Type your message...."
       >
+      <button
+        type="submit"
+        class="bg-green-400 hover:bg-opacity-80 duration-150 px-4 py-2 w-full mt-4 text-white inline-block focus:outline-none"
+      >
+        Send
+      </button>
     </form>
   </div>
 </template>
@@ -88,7 +94,7 @@ export default {
       text,
       getOtherUsers,
       submit () {
-        // console.log(text.value)
+        if (!text.value) return
         store.commit('NEW_TEXT_MESSAGE', {
           conversation: props.conversation,
           user: props.user.id,

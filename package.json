@@ -9,6 +9,7 @@
   "dependencies": {
     "faker": "^5.5.3",
     "vue": "^3.2.6",
+    "vue3-carousel": "^0.1.25",
     "vuex": "^4.0.2"
   },
   "devDependencies": {

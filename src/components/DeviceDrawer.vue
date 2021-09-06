@@ -16,14 +16,14 @@
       >
         &times;
       </button>
-      <div class="flex items-center justify-between px-2">
+      <div class="md:(flex items-center justify-between) px-2">
         <p class=" mb-4">
           Logged in as: <b>{{ user.name }}</b>
         </p>
         <div>
           <select
             id="users"
-            class="border-gray-400 border-2 p-2"
+            class="border-gray-400 border-2 p-2 mb-4 md:mb-0"
             name="users"
             @change="$emit('setActiveUser', $event.target.value)"
           >

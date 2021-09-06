@@ -1715,10 +1715,10 @@ vue-eslint-parser@^7.10.0:
     lodash "^4.17.21"
     semver "^6.3.0"
 
-vue3-click-away@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/vue3-click-away/-/vue3-click-away-1.2.1.tgz#3645b2671db152d53c95b936540f7e449616f5d4"
-  integrity sha512-8GA3rfFlwIS9oCqFzqGdk7CvUz7JwvoiBJQLW4BxrVQEgzTB9oo/lWMazz4XwouA8tnquIHa2ZBHLix689RpAg==
+vue3-carousel@^0.1.25:
+  version "0.1.25"
+  resolved "https://registry.yarnpkg.com/vue3-carousel/-/vue3-carousel-0.1.25.tgz#6b62f1f8d81047a3a3469ac076933e3909a8fd04"
+  integrity sha512-9Inz4Spa0NSu4yz/GnhXp+/qIG4Z0slwf1rp7ywbSqFvCj4jWo4NUpmpmdAVfYMXp57JYWAgp4j5Mq/X3y53iQ==
 
 vue@^3.2.6:
   version "3.2.6"
