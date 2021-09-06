@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col h-full">
+  <div>
     <div
       v-if="conversation.messages.length"
       class="px-2"
@@ -20,18 +20,18 @@
       </transition-group>
     </div>
     <form
-      class="w-full sticky bottom-0 mt-auto"
+      class="w-full absolute bottom-0"
       @submit.prevent="submit"
     >
       <input
         v-model="text"
         type="text"
-        class="border-t-4 w-full focus:outline-none text-sm px-3.5 h-13 flex items-center"
+        class="border-t-4 w-full focus:outline-none text-sm px-3.5 h-13 flex items-center pb-5"
         placeholder="Type your message...."
       >
       <button
         type="submit"
-        class="bg-green-400 hover:bg-opacity-80 duration-150 px-4 py-2 w-full mt-4 text-white inline-block focus:outline-none"
+        class="bg-green-400 hover:bg-opacity-80 duration-150 px-4 py-2 w-full text-white inline-block focus:outline-none"
       >
         Send
       </button>

@@ -1,8 +1,6 @@
 <template>
   <div
-    v-if="defaultUser"
-    class="pt-2 pb-0 h-screen w-screen md:(h-150 mx-5 border border-4 rounded-md) flex-1 flex flex-col relative"
-    :class="drawerOpen ? 'overflow-y-hidden' : 'overflow-y-auto'"
+    class="pt-2 pb-0 h-screen w-screen md:(h-150 mx-5 border border-4 rounded-md) flex-1 flex flex-col relative overflow-hidden"
   >
     <device-drawer
       :drawer-open="drawerOpen"
@@ -11,23 +9,25 @@
       @toggleDrawer="toggleDrawer"
       @setActiveUser="setActiveUser"
     />
-    <div class="flex flex-wrap mb-3 items-center px-2 border-b-4">
-      <hamburger
-        :drawer-open="drawerOpen"
-        @toggleDrawer="toggleDrawer"
+    <div class="h-full overflow-y-auto">
+      <div class="flex flex-wrap mb-3 items-center p-2 border-b-4 sticky -top-2 bg-white z-20">
+        <hamburger
+          :drawer-open="drawerOpen"
+          @toggleDrawer="toggleDrawer"
+        />
+        <p>
+          <!-- Hard coding the first user but if this was a group chat, then could loop through all other users in the text and show them -->
+          <template v-if="$store.getters.GET_USER(getOtherUsers[0]?.user)">
+            {{ $store.getters.GET_USER(getOtherUsers[0]?.user)?.name }} ({{ $store.getters.GET_USER(getOtherUsers[0]?.user)?.number }})
+          </template>
+        </p>
+      </div>
+      <conversation
+        v-if="conversation"
+        :user="user"
+        :conversation="conversation"
       />
-      <p>
-        <!-- Hard coding the first user but if this was a group chat, then could loop through all other users in the text and show them -->
-        <template v-if="$store.getters.GET_USER(getOtherUsers[0]?.user)">
-          {{ $store.getters.GET_USER(getOtherUsers[0]?.user)?.name }} ({{ $store.getters.GET_USER(getOtherUsers[0]?.user)?.number }})
-        </template>
-      </p>
     </div>
-    <conversation
-      v-if="conversation"
-      :user="user"
-      :conversation="conversation"
-    />
   </div>
 </template>
 
