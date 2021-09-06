@@ -26,7 +26,7 @@
       <input
         v-model="text"
         type="text"
-        class="border-t-4 w-full focus:outline-none text-sm px-3.5 h-13 flex items-center pb-5"
+        class="md:border-t-4 border-t w-full focus:outline-none text-sm px-3.5 h-13 flex items-center pb-5"
         placeholder="Type your message...."
       >
       <button
