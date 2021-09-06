@@ -9,7 +9,7 @@
       @toggleDrawer="toggleDrawer"
       @setActiveUser="setActiveUser"
     />
-    <div class="flex flex-wrap mb-3 items-center px-2 py-6 md:(py-2 absolute) border-b-4 sticky w-full -top-2 bg-white z-20">
+    <div class="flex flex-wrap mb-3 items-center px-2 py-6 md:(py-2 absolute) border-b-4 fixed w-full -top-2 bg-white z-20">
       <hamburger
         :drawer-open="drawerOpen"
         @toggleDrawer="toggleDrawer"
