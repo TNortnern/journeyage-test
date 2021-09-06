@@ -31,6 +31,7 @@
       @submit.prevent="submit"
     >
       <input
+        ref="textInput"
         v-model="text"
         type="text"
         class="md:border-t-4 border-t w-full focus:outline-none text-sm px-3.5 h-13 flex items-center pb-5"
@@ -73,6 +74,7 @@ export default {
   setup (props) {
     const store = useStore()
     const topDiv = ref(null)
+    const textInput = ref(null)
     const text = computed({
       get () {
         const messageIndex = props.user.currentMessages.findIndex((curr) => curr.conversation === props.conversation.id)
@@ -111,6 +113,7 @@ export default {
       getOtherUsers,
       firstString: (str) => str.charAt(0),
       topDiv,
+      textInput,
       submit () {
         if (!text.value) return
         store.commit('NEW_TEXT_MESSAGE', {
@@ -120,6 +123,7 @@ export default {
         })
         const container = topDiv.value;
         container.scrollTop = container.scrollHeight;
+        textInput.value.focus()
         text.value = ''
       }
     }
