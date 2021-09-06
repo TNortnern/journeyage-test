@@ -8,7 +8,7 @@
         name="fade"
         mode="out-in"
         tag="div"
-        class="messages"
+        class="messages pb-30 pt-24 md:(pb-0 pt-0)"
       >
         <message
           v-for="item in conversation.messages"
