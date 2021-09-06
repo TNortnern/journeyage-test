@@ -9,19 +9,19 @@
       @toggleDrawer="toggleDrawer"
       @setActiveUser="setActiveUser"
     />
+    <div class="flex flex-wrap mb-3 items-center px-2 py-6 md:(py-2 absolute) border-b-4 sticky w-full -top-2 bg-white z-20">
+      <hamburger
+        :drawer-open="drawerOpen"
+        @toggleDrawer="toggleDrawer"
+      />
+      <p>
+        <!-- Hard coding the first user but if this was a group chat, then could loop through all other users in the text and show them -->
+        <template v-if="$store.getters.GET_USER(getOtherUsers[0]?.user)">
+          {{ $store.getters.GET_USER(getOtherUsers[0]?.user)?.name }} ({{ $store.getters.GET_USER(getOtherUsers[0]?.user)?.number }})
+        </template>
+      </p>
+    </div>
     <div class="h-full overflow-y-auto">
-      <div class="flex flex-wrap mb-3 items-center px-2 py-6 md:(py-2 absolute) border-b-4 fixed w-full -top-2 bg-white z-20">
-        <hamburger
-          :drawer-open="drawerOpen"
-          @toggleDrawer="toggleDrawer"
-        />
-        <p>
-          <!-- Hard coding the first user but if this was a group chat, then could loop through all other users in the text and show them -->
-          <template v-if="$store.getters.GET_USER(getOtherUsers[0]?.user)">
-            {{ $store.getters.GET_USER(getOtherUsers[0]?.user)?.name }} ({{ $store.getters.GET_USER(getOtherUsers[0]?.user)?.number }})
-          </template>
-        </p>
-      </div>
       <conversation
         v-if="conversation"
         :user="user"
