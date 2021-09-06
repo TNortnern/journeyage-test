@@ -24,11 +24,12 @@ const store = createStore({
         name: faker.name.findName(),
         number: faker.phone.phoneNumber(),
         activeConversation: 1,
+        // keeps track of all user's current messages in each conversation
         currentMessages: [
           {
-            id: 1,
-            conversation: 1,
-            text: faker.random.words(),
+            // id: 1,
+            // conversation: 1,
+            // text: faker.random.words(),
           },
         ],
         contacts: [],
@@ -67,7 +68,7 @@ const store = createStore({
   }),
   getters: {
     GET_USER: (state) => (id) => {
-      return state.users.find((user) => user.id === id);
+      return state.users.find((user) => user.id.toString() === id?.toString());
     },
     GET_CONVERSATION: (state) => (id) => {
       return state.conversations.find((conv) => conv.id === id);

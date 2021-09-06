@@ -1,39 +1,18 @@
 <template>
   <div
+    v-if="defaultUser"
     class="border border-4 rounded-md pt-2 pb-0 h-150 flex-1 mx-5 flex flex-col relative"
     :class="drawerOpen ? 'overflow-y-hidden' : 'overflow-y-auto'"
   >
-    <transition name="fade">
-      <div
-        v-if="drawerOpen"
-        class="bg-black bg-opacity-75 absolute h-full w-full z-25"
-      />
-    </transition>
-    <transition name="drawer">
-      <div
-        v-if="drawerOpen"
-        class="bg-white h-full absolute inset-0 w-full md:w-4/5 z-30 pt-16 overflow-y-auto"
-      >
-        <button
-          class="bg-green-400 hover:bg-opacity-80 duration-150 px-4 py-2 rounded-md text-white inline-block mb-4 ml-2"
-          @click="$store.dispatch('NEW_CONVERSATION', {
-            sent: new Date(),
-            user,
-          })"
-        >
-          New conversation
-        </button>
-        <conversation-list-item
-          v-for="item in $store.state.conversations.filter((conv) => conv.users.find((u) => u.user === user.id))"
-          :key="item.id"
-          :conversation="item"
-          :user="user"
-          @toggleDrawer="toggleDrawer"
-        />
-      </div>
-    </transition>
+    <device-drawer
+      :drawer-open="drawerOpen"
+      :conversation="conversation"
+      :user="user"
+      @toggleDrawer="toggleDrawer"
+      @setActiveUser="setActiveUser"
+    />
     <div
-      class="flex mb-3 items-center px-2 relative z-40"
+      class="flex mb-3 items-center px-2"
     >
       <hamburger
         :drawer-open="drawerOpen"
@@ -43,20 +22,17 @@
         name="text-fade"
         mode="out-in"
       >
-        <p v-if="!drawerOpen">
+        <p>
           <!-- Hard coding the first user but if this was a group chat, then could loop through all other users in the text and show them -->
           <template v-if="$store.getters.GET_USER(getOtherUsers[0]?.user)">
             {{ $store.getters.GET_USER(getOtherUsers[0]?.user)?.name }} ({{ $store.getters.GET_USER(getOtherUsers[0]?.user)?.number }})
           </template>
         </p>
-        <p v-else>
-          Logged in as: {{ user.name }}
-        </p>
       </transition>
     </div>
     <conversation
       v-if="conversation"
-      v-bind="$props"
+      :user="user"
       :conversation="conversation"
     />
   </div>
@@ -64,32 +40,34 @@
 
 <script>
 import Conversation from './Conversation.vue'
-import ConversationListItem from './ConversationListItem.vue'
 import { computed, ref } from '@vue/reactivity'
 import Hamburger from './Hamburger.vue'
 import { useStore } from 'vuex'
 import { watch } from '@vue/runtime-core'
+import DeviceDrawer from './DeviceDrawer.vue'
 export default {
-  components: { Conversation, ConversationListItem, Hamburger, },
+  components: { Conversation, Hamburger, DeviceDrawer, },
   props: {
-    user: {
+    defaultUser: {
       type: Object,
       default: null,
     },
   },
   setup (props) {
+    const user = ref(props.defaultUser)
     const store = useStore()
     const drawerOpen = ref(false)
     const toggleDrawer = () => drawerOpen.value = !drawerOpen.value
-    const conversation = computed(() => store.getters.GET_CONVERSATION(props.user.activeConversation))
-    watch(() => conversation.value, (val) => {
-      console.log(`val`, val)
+    const conversation = computed(() => store.getters.GET_CONVERSATION(user.value.activeConversation))
+    watch(() => conversation.value, () => {
+      // console.log(`val`, val)
     })
     const getOtherUsers = computed(() => {
+      if (!conversation.value) return []
       const getUsers = conversation.value.users.filter((c) => {
         // console.log(c)
         // using an array just in case a group chat is implemeted and needing to find all user's that is isn't the user of the device
-        const otherUsers = c.user !== props.user.id
+        const otherUsers = c.user !== user.value.id
         return otherUsers
       })
       return getUsers
@@ -97,8 +75,12 @@ export default {
     return {
       drawerOpen,
       conversation,
+      user,
       toggleDrawer,
       getOtherUsers,
+      setActiveUser(userId) {
+        user.value = store.getters.GET_USER(userId)
+      }
     }
   },
 }
