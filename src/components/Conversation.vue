@@ -1,7 +1,7 @@
 <template>
   <div
     ref="topDiv"
-    class="h-full overflow-y-auto"
+    class="flex flex-col h-full overflow-y-auto"
   >
     <div
       v-if="conversation.messages.length"
@@ -11,7 +11,7 @@
         name="message-fade"
         mode="out-in"
         tag="div"
-        class="messages pt-24 md:(pt-15) pb-24 mb-12"
+        class="messages pt-24 md:(pt-15 pb-3) md:pb-24 mb-12"
       >
         <message
           v-for="item in conversation.messages"
@@ -27,7 +27,7 @@
       </transition-group>
     </div>
     <form
-      class="w-full md:(absolute) fixed bottom-0 -mt-12"
+      class="w-full md:(absolute) sticky bottom-0 mt-auto"
       @submit.prevent="submit"
     >
       <input
