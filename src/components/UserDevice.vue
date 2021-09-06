@@ -1,6 +1,6 @@
 <template>
   <div
-    class="pt-2 pb-0 w-screen md:(h-150 mx-5 border border-4 rounded-md)  relative overflow-hidden"
+    class="pt-2 pb-0 w-screen  flex flex-col md:(h-150 mx-5 border border-4 rounded-md) relative overflow-hidden"
   >
     <device-drawer
       :drawer-open="drawerOpen"

@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-7xl mx-auto md:pt-8 min-h-screen md:px-4">
+  <div class="max-w-7xl mx-auto md:pt-8 min-h-screen md:px-4 min-h-screen">
     <user-device
       id="mobile-user"
       class="md:hidden"
